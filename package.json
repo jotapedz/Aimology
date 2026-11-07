@@ -1,0 +1,20 @@
+{
+  "name": "aimology",
+  "version": "1.0.0",
+  "description": "Treino de mira e análise de sensibilidade para Valorant no navegador.",
+  "private": true,
+  "license": "MIT",
+  "author": "João Pedro Lisboa",
+  "type": "module",
+  "engines": {
+    "node": ">=22"
+  },
+  "scripts": {
+    "start": "node server.mjs",
+    "test": "node --test tests/*.test.mjs"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/jotapedz/Aimology.git"
+  }
+}

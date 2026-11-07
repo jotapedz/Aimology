@@ -1,0 +1,11 @@
+import test from 'node:test';
+import assert from 'node:assert/strict';
+import {TASKS,makePlan,analyze} from '../dist/engine.js';
+import {makePlan as legacyPlan} from '../dist/legacy-engine.js';
+import * as V from '../dist/views.js';
+import {profile,trialsFor} from './fixtures.mjs';
+const record=(plan,ts)=>({id:'test',plan,trials:ts,result:analyze(plan,ts),createdAt:'2026-11-07T12:00:00Z'});
+test('all drill routes render and show only their own practice records',()=>{const plan=makePlan(profile),ts=trialsFor(plan);const records=ts.map(t=>({createdAt:'2026-11-07T12:00:00Z',trial:t,profile}));for(const task of TASKS){const html=V.practice({task,profile,practiceHistory:records});assert.ok(html.includes('id="practice-form"'));assert.ok(html.includes(`value="${task}" selected`));assert.ok(!html.includes('undefined'));}});
+test('full reports and detailed exercise views handle real and insufficient data',()=>{const p=makePlan(profile,'deep',1);for(const q of [()=>1,()=>0]){const ts=trialsFor(p,q);ts.forEach(t=>{if(!t.hits)t.reactionTimes=[];});const r=record(p,ts);for(const html of [V.results(r),...TASKS.map(t=>V.analysisDetail(r,t))]){assert.ok(!html.includes('NaN'));assert.ok(!html.includes('undefined'));assert.ok(!html.includes('Infinity'));}}});
+test('legacy reports do not demand metrics that were never collected',()=>{const p=legacyPlan(profile,'quick',1),ts=p.rounds.map(t=>({...t,durationMs:15000,hits:15,shots:20,onTargetMs:6000})),r=record(p,ts);assert.ok(V.results(r).includes('Sessão v1'));assert.ok(!V.results(r).includes('undefined'));});
+test('refinement selection survives a complete view render',()=>{const html=V.diagnostic({pending:null,profileFields:()=>'',refine:true});assert.ok(html.includes('value="refine" selected'));assert.ok(html.includes('60 rodadas'));assert.ok(html.includes('90 rodadas'));assert.ok(!html.includes('repetiçãoões'));});

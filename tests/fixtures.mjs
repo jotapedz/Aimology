@@ -1,0 +1,4 @@
+import {isTracking} from '../dist/engine.js';
+import {createTelemetry} from '../dist/training.js';
+export const profile={dpi:800,sens:.35,calibration:1,sound:false};
+export function trialsFor(plan,quality=()=>1){return plan.rounds.map(t=>{const q=quality(t),track=isTracking(t.task),ms=t.seconds*1000,hits=track?0:Math.round(40*q),m=createTelemetry();Object.assign(m,{sampleMs:ms,errorIntegral:ms*(2-q),errorSamples:Array(t.seconds*20).fill(2-q),frames:t.seconds*120,completedTargets:hits,heatmap:Array.from({length:49},(_,i)=>i===24?ms:0),efficiencies:track?[]:Array(hits).fill(.9),seconds:Array.from({length:t.seconds},()=>({ms:1000,on:800*q,error:1000*(2-q)}))});return {...t,durationMs:ms,hits,shots:track?0:40,onTargetMs:track?ms*.8*q:0,angularPath:100,reactionTimes:track?[]:Array(hits).fill(400/q),telemetry:m};});}
