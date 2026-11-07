@@ -2,6 +2,9 @@
 
 Laboratório de sensibilidade para Valorant, por João Pedro Lisboa. Aplicação funcional em português, com treino no navegador e recomendação baseada em desempenho. Projeto independente, sem vínculo com Riot Games, Oblivity, Aim Lab ou KovaaK's.
 
+##Site disponivel 
+https://jotapedz.github.io/Aimology/
+
 ## Executar
 
 Requer Node.js 22 ou superior. Não é necessário instalar dependências.
